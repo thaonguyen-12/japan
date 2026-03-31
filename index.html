@@ -1,0 +1,638 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans, sans-serif); }
+
+.container { padding: 1rem 0; max-width: 100%; }
+
+.header-card {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.header-card h1 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.header-card p { font-size: 13px; color: var(--color-text-secondary); }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.stat-card {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+.stat-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.stat-label { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; }
+
+.phase-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: var(--border-radius-md);
+}
+.phase-1 { background: var(--color-background-info); color: var(--color-text-info); }
+.phase-2 { background: var(--color-background-success); color: var(--color-text-success); }
+.phase-3 { background: var(--color-background-warning); color: var(--color-text-warning); }
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1rem;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  padding-bottom: 0;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: var(--font-sans, sans-serif);
+}
+.tab-btn.active {
+  color: var(--color-text-primary);
+  border-bottom: 2px solid var(--color-text-primary);
+  font-weight: 500;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.week-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.week-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: var(--color-background-secondary);
+}
+.week-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.week-meta { font-size: 12px; color: var(--color-text-secondary); }
+.week-body { padding: 0 14px 12px; }
+
+.day-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+  align-items: start;
+}
+.day-row:last-child { border-bottom: none; }
+
+.day-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  padding-top: 2px;
+}
+.day-name.weekend { color: var(--color-text-info); }
+
+.sessions { display: flex; flex-direction: column; gap: 4px; }
+.session {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+}
+.session-time {
+  min-width: 70px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.session-content {
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+.session-tag {
+  display: inline-block;
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.tag-vocab { background: var(--color-background-info); color: var(--color-text-info); }
+.tag-grammar { background: var(--color-background-success); color: var(--color-text-success); }
+.tag-kanji { background: var(--color-background-warning); color: var(--color-text-warning); }
+.tag-listening { background: #f3e8ff; color: #7c3aed; }
+.tag-reading { background: #fce7f3; color: #be185d; }
+.tag-practice { background: var(--color-background-danger); color: var(--color-text-danger); }
+
+.rest-note {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+.tip-box {
+  background: var(--color-background-info);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--color-text-info);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.overview-card {
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 1rem;
+}
+.overview-card h3 { font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--color-text-primary); }
+.overview-card ul { list-style: none; }
+.overview-card ul li { font-size: 12px; color: var(--color-text-secondary); padding: 3px 0; border-bottom: 0.5px solid var(--color-border-tertiary); }
+.overview-card ul li:last-child { border-bottom: none; }
+.overview-card ul li strong { color: var(--color-text-primary); font-weight: 500; }
+
+.chevron { transition: transform 0.2s; font-size: 12px; color: var(--color-text-tertiary); }
+.week-card.collapsed .chevron { transform: rotate(-90deg); }
+.week-card.collapsed .week-body { display: none; }
+</style>
+
+<div class="container">
+
+<div class="header-card">
+  <h1>Lịch học JLPT N3 — 28/3 đến 30/6/2026</h1>
+  <p>Mục tiêu: Ôn luyện lại từ đầu → Thi N3 kỳ tháng 7/2026 &nbsp;|&nbsp; Tổng ~14 tuần</p>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-num">~14</div><div class="stat-label">tuần học</div></div>
+  <div class="stat-card"><div class="stat-num">~8–10h</div><div class="stat-label">mỗi tuần</div></div>
+  <div class="stat-card"><div class="stat-num">3</div><div class="stat-label">giai đoạn</div></div>
+  <div class="stat-card"><div class="stat-num">5/7</div><div class="stat-label">ngày thi dự kiến</div></div>
+</div>
+
+<div class="legend">
+  <span class="session-tag tag-vocab" style="font-size:12px;padding:3px 8px">Từ vựng</span>
+  <span class="session-tag tag-grammar" style="font-size:12px;padding:3px 8px">Ngữ pháp</span>
+  <span class="session-tag tag-kanji" style="font-size:12px;padding:3px 8px">Kanji</span>
+  <span class="session-tag tag-listening" style="font-size:12px;padding:3px 8px">Nghe</span>
+  <span class="session-tag tag-reading" style="font-size:12px;padding:3px 8px">Đọc hiểu</span>
+  <span class="session-tag tag-practice" style="font-size:12px;padding:3px 8px">Luyện đề</span>
+</div>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('overview')">Tổng quan</button>
+  <button class="tab-btn" onclick="switchTab('phase1')">Giai đoạn 1<br><span style="font-size:10px">T1 (28/3–25/4)</span></button>
+  <button class="tab-btn" onclick="switchTab('phase2')">Giai đoạn 2<br><span style="font-size:10px">T2 (26/4–30/5)</span></button>
+  <button class="tab-btn" onclick="switchTab('phase3')">Giai đoạn 3<br><span style="font-size:10px">T3 (31/5–30/6)</span></button>
+</div>
+
+<!-- OVERVIEW -->
+<div id="tab-overview" class="tab-content active">
+  <div class="overview-grid">
+    <div class="overview-card">
+      <h3><span class="phase-badge phase-1">Giai đoạn 1</span> Xây lại nền tảng</h3>
+      <ul>
+        <li><strong>28/3 – 25/4</strong> (4 tuần)</li>
+        <li>Ôn toàn bộ từ vựng N4→N3</li>
+        <li>Kanji N4→N3 (học lại)</li>
+        <li>Ngữ pháp N4 cơ bản → N3</li>
+        <li>Nghe: JLPT N4 level</li>
+        <li>Tài liệu: Sou Matome N3, Anki deck</li>
+      </ul>
+    </div>
+    <div class="overview-card">
+      <h3><span class="phase-badge phase-2">Giai đoạn 2</span> Đào sâu N3</h3>
+      <ul>
+        <li><strong>26/4 – 30/5</strong> (5 tuần)</li>
+        <li>Ngữ pháp N3 toàn tập</li>
+        <li>Kanji N3 nâng cao</li>
+        <li>Luyện đọc hiểu N3</li>
+        <li>Nghe N3 thực chiến</li>
+        <li>Tài liệu: Shin Kanzen Master N3</li>
+      </ul>
+    </div>
+    <div class="overview-card">
+      <h3><span class="phase-badge phase-3">Giai đoạn 3</span> Luyện đề thi</h3>
+      <ul>
+        <li><strong>31/5 – 30/6</strong> (4 tuần)</li>
+        <li>Đề thi thử JLPT N3</li>
+        <li>Phân tích lỗi sai, ôn yếu điểm</li>
+        <li>Luyện tốc độ làm bài</li>
+        <li>Ôn tổng hợp tất cả phần</li>
+        <li>Tài liệu: JLPT N3 past papers</li>
+      </ul>
+    </div>
+    <div class="overview-card">
+      <h3>Lịch học hàng tuần</h3>
+      <ul>
+        <li><strong>Thứ 7</strong>: Học sâu cả ngày (4–5 giờ)</li>
+        <li><strong>Chủ nhật</strong>: 8h–12h sáng (3 giờ)</li>
+        <li><strong>T2–T6</strong>: Tối 18h30–20h30 (2 giờ)</li>
+        <li><strong>Tăng ca</strong>: Rút xuống 30–45 phút</li>
+        <li><strong>Tổng</strong>: ~8–10 giờ/tuần</li>
+      </ul>
+    </div>
+  </div>
+  <div class="tip-box">
+    Gợi ý app hỗ trợ: <strong>Anki</strong> (flashcard từ vựng/kanji) · <strong>JLPT Sensei</strong> (luyện đề) · <strong>Podcast Nihongo con Teppei</strong> (nghe mọi lúc) · <strong>Bunpro</strong> (SRS ngữ pháp)
+  </div>
+</div>
+
+<!-- PHASE 1 -->
+<div id="tab-phase1" class="tab-content">
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
+    <span class="phase-badge phase-1">Giai đoạn 1</span> &nbsp;Xây lại nền tảng — 28/3 đến 25/4 (4 tuần)
+  </p>
+
+  <!-- Tuần 1 -->
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 1 &nbsp;·&nbsp; 28/3 – 3/4</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Từ vựng + Kanji N4 ôn lại</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>28/3</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–09:30</span><span class="session-content">Từ vựng N4 (bộ 1: 1–100 từ) — Anki, Sou Matome<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">09:30–09:45</span><span class="session-content">Nghỉ giải lao</span></div>
+          <div class="session"><span class="session-time">09:45–11:15</span><span class="session-content">Kanji N4 (bộ 1: 50 kanji) — viết + đọc âm<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">11:15–12:00</span><span class="session-content">Ngữ pháp N4 ôn lại (て形、た形, điều kiện cơ bản)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">14:00–15:30</span><span class="session-content">Nghe JLPT N4 practice (phần 1–2) — chép lại từ không nghe được<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">15:30–16:30</span><span class="session-content">Ôn lại từ vựng bộ 1 qua Anki — kiểm tra lại</span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>29/3</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–09:30</span><span class="session-content">Từ vựng N4 (bộ 2: 101–200 từ)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">09:30–10:30</span><span class="session-content">Kanji N4 ôn lại bộ 1 + học bộ 2 (kanji 51–80)<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">10:30–12:00</span><span class="session-content">Đọc đoạn văn N4 ngắn (Sou Matome) + tra từ mới<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T4<br>30/3–1/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:15</span><span class="session-content">Anki ôn từ vựng bộ 1+2 (25–30 phút) + học từ mới bộ 3 (201–250)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:15–20:15</span><span class="session-content">Ngữ pháp N4 (1 bài/ngày: ～てもいい、～てはいけない, ～ている...)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time" style="color:var(--color-text-danger)">⚡ Tăng ca</span><span class="session-content rest-note">Chỉ mở Anki 30 phút trên điện thoại trước khi ngủ</span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T5–T6<br>2/4–3/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:30</span><span class="session-content">Kanji N4 ôn tổng (bộ 1–2) + tập viết<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">19:30–20:30</span><span class="session-content">Nghe N4 (podcast Nihongo con Teppei for Beginner) + luyện tai<span class="session-tag tag-listening">nghe</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tuần 2 -->
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 2 &nbsp;·&nbsp; 4/4 – 10/4</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Từ vựng N3 (bắt đầu) + Ngữ pháp N4 hoàn thành</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>4/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Từ vựng N3 (bộ 1: 1–80 từ, chủ đề: con người & cảm xúc)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">10:00–11:30</span><span class="session-content">Kanji N3 bắt đầu (1–50 kanji: 部首 phân loại)<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">13:00–14:30</span><span class="session-content">Ngữ pháp N4 ôn tổng kết — làm bài test N4 grammar<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">14:30–15:30</span><span class="session-content">Nghe JLPT N4 full section — tính thời gian<span class="session-tag tag-listening">nghe</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>5/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–09:30</span><span class="session-content">Từ vựng N3 bộ 2 (81–160 từ, chủ đề: xã hội & kinh tế)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">09:30–11:00</span><span class="session-content">Đọc hiểu đoạn ngắn N3 (Sou Matome đọc hiểu)<span class="session-tag tag-reading">đọc</span></span></div>
+          <div class="session"><span class="session-time">11:00–12:00</span><span class="session-content">Kanji N3 ôn bộ 1 (50 kanji) + tự test<span class="session-tag tag-kanji">kanji</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>6–10/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki: ôn từ vựng N3 bộ 1+2 (30 phút)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:00</span><span class="session-content">Ngữ pháp N3 bắt đầu (～ために、～ようにする、～ことにする ...)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">20:00–20:30</span><span class="session-content">Kanji N3 (5–8 kanji mới/ngày)<span class="session-tag tag-kanji">kanji</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tuần 3 -->
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 3 &nbsp;·&nbsp; 11/4 – 17/4</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Từ vựng N3 (tiếp) + Ngữ pháp N3 đẩy mạnh</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>11/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Từ vựng N3 bộ 3+4 (161–320 từ, chủ đề: tự nhiên, kỹ thuật)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">10:00–11:30</span><span class="session-content">Ngữ pháp N3 (nhóm 2: ～ばかりでなく、～だけでなく、～に対して)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">13:00–14:30</span><span class="session-content">Kanji N3 bộ 2 (51–120 kanji)<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">14:30–16:00</span><span class="session-content">Nghe N3: JLPT N3 mock listening section<span class="session-tag tag-listening">nghe</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>12/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–09:30</span><span class="session-content">Ôn tổng từ vựng N3 bộ 1–4 qua Anki<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">09:30–11:00</span><span class="session-content">Đọc hiểu N3: đoạn trung bình (200–400 chữ)<span class="session-tag tag-reading">đọc</span></span></div>
+          <div class="session"><span class="session-time">11:00–12:00</span><span class="session-content">Ngữ pháp tự test bộ 1+2 đã học<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>13–17/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki ôn từ vựng + 10 từ mới<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:00</span><span class="session-content">Ngữ pháp N3 (2–3 mẫu/ngày) + đặt câu ví dụ tự sáng tác<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">20:00–20:30</span><span class="session-content">Nghe: 1 đoạn ngắn trên YouTube (tiếng Nhật tự nhiên)<span class="session-tag tag-listening">nghe</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tuần 4 -->
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 4 &nbsp;·&nbsp; 18/4 – 25/4</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Tổng kết giai đoạn 1 + Mini test</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>18/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:30</span><span class="session-content">Ôn toàn bộ từ vựng N3 bộ 1–4 + bổ sung bộ 5 (321–400)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">10:30–12:00</span><span class="session-content">Kanji N3: tự test 120 kanji đã học<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">13:00–15:00</span><span class="session-content">Làm đề mini N3 (từ vựng + ngữ pháp) — tính thời gian, phân tích sai<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">15:00–16:00</span><span class="session-content">Sửa lỗi sai + ghi chú điểm yếu</span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>19/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Nghe N3: làm section nghe đề mini — phân tích<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Đọc hiểu N3: 3 đoạn dài — luyện tốc độ đọc<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T5<br>20–25/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:30</span><span class="session-content">Ngữ pháp N3 ôn tổng giai đoạn 1 (bộ 1–3 patterns)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">19:30–20:30</span><span class="session-content">Kanji mới N3 (bộ 3: 121–160) + Anki review<span class="session-tag tag-kanji">kanji</span></span></div>
+        </div>
+      </div>
+      <div class="tip-box">Cuối giai đoạn 1: Bạn nên nhớ được ~400 từ N3, ~160 kanji N3, và ~20 mẫu ngữ pháp N3 cốt lõi.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 2 -->
+<div id="tab-phase2" class="tab-content">
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
+    <span class="phase-badge phase-2">Giai đoạn 2</span> &nbsp;Đào sâu N3 — 26/4 đến 30/5 (5 tuần)
+  </p>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 5 &nbsp;·&nbsp; 26/4 – 2/5</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Ngữ pháp N3 nâng cao + Từ vựng bổ sung</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>26/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Ngữ pháp N3 nâng cao (～わけだ、～わけにはいかない、～はずだ)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">10:00–11:30</span><span class="session-content">Từ vựng N3 bộ 5+6 (401–520 từ)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">13:00–15:00</span><span class="session-content">Đọc hiểu N3 đoạn trung bình + dài (Shin Kanzen Master)<span class="session-tag tag-reading">đọc</span></span></div>
+          <div class="session"><span class="session-time">15:00–16:00</span><span class="session-content">Kanji N3 bộ 4 (161–200) + ôn lại bộ 1–3<span class="session-tag tag-kanji">kanji</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>27/4</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Nghe N3 (Shin Kanzen Master Listening) — phần hội thoại<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Ngữ pháp luyện viết câu — tự đặt 30 câu dùng mẫu mới<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>28/4–2/5</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki: ôn từ vựng N3 tổng + thêm bộ 7 (521–580)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:00</span><span class="session-content">Ngữ pháp N3 mẫu mới (2–3 mẫu/ngày) — ưu tiên Shin Kanzen<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">20:00–20:30</span><span class="session-content">Đọc đoạn ngắn 1 bài/ngày (báo chí đơn giản tiếng Nhật)<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 6 &nbsp;·&nbsp; 3/5 – 9/5</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Đọc hiểu chuyên sâu + Kanji hoàn thiện</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>3/5</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:30</span><span class="session-content">Đọc hiểu N3: luyện đoạn dài (500+ chữ) — kỹ thuật đọc lướt, tìm ý chính<span class="session-tag tag-reading">đọc</span></span></div>
+          <div class="session"><span class="session-time">10:30–12:00</span><span class="session-content">Kanji N3 bộ 5+6 (201–280 kanji)<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">13:00–14:30</span><span class="session-content">Ngữ pháp N3 (nhóm 3: ～にしても、～としても、～にせよ)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">14:30–16:00</span><span class="session-content">Làm đề mini section đọc hiểu + ngữ pháp N3<span class="session-tag tag-practice">luyện đề</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>4/5</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Nghe N3 chuyên sâu: hội thoại tình huống (công sở, mua sắm)<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Ôn tổng từ vựng N3 bộ 1–7 — test ngẫu nhiên<span class="session-tag tag-vocab">từ vựng</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>5–9/5</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki review + kanji mới 5–6 chữ/ngày<span class="session-tag tag-kanji">kanji</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:30</span><span class="session-content">Ngữ pháp N3 nâng cao (2 mẫu) + luyện đọc 1 đoạn<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 7–9 &nbsp;·&nbsp; 10/5 – 30/5</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Hoàn thiện tất cả 4 kỹ năng N3</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>(mỗi tuần)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Ngữ pháp N3 ôn + học mẫu mới (Shin Kanzen Chapter mới)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">10:00–11:30</span><span class="session-content">Từ vựng N3 bổ sung (bộ 8–10: 581–750 từ, trải đều 3 tuần)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">13:00–14:30</span><span class="session-content">Làm 1 bộ đề section tổng hợp N3 (từ vựng + ngữ pháp + đọc)<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">14:30–16:00</span><span class="session-content">Kanji ôn tổng (mỗi tuần test 80 kanji)<span class="session-tag tag-kanji">kanji</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>(mỗi tuần)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Nghe N3: 1 bộ đề nghe đầy đủ — phân tích chi tiết<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Đọc hiểu N3: luyện đoạn dài + tốc độ (giới hạn 30 phút/bài)<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>(mỗi ngày)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki (ôn cũ + 10 từ mới) + Kanji 5/ngày<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:30</span><span class="session-content">Luân phiên: Ngữ pháp (T2,T4,T6) / Đọc+Nghe (T3,T5)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+        </div>
+      </div>
+      <div class="tip-box">Cuối giai đoạn 2: Hoàn thành ~750 từ vựng N3, ~280 kanji N3, toàn bộ ngữ pháp N3. Điểm mock test nên đạt 50–55/100.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASE 3 -->
+<div id="tab-phase3" class="tab-content">
+  <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:12px">
+    <span class="phase-badge phase-3">Giai đoạn 3</span> &nbsp;Luyện đề thi — 31/5 đến 30/6 (4 tuần + nghỉ thi)
+  </p>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 10–11 &nbsp;·&nbsp; 31/5 – 13/6</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Luyện đề đầy đủ + Phân tích điểm yếu</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>(mỗi tuần)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–11:00</span><span class="session-content">Làm đề thi thử N3 đầy đủ (đúng giờ: 105 phút phần 1+2, 60 phút nghe)<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">11:00–12:00</span><span class="session-content">Chấm điểm + đánh dấu lỗi sai theo từng section</span></div>
+          <div class="session"><span class="session-time">13:30–15:30</span><span class="session-content">Ôn sâu phần sai nhất (ngữ pháp / đọc / nghe tùy tuần)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">15:30–16:30</span><span class="session-content">Anki ôn từ vựng + kanji từng sai trong đề<span class="session-tag tag-vocab">từ vựng</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>(mỗi tuần)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Làm lại section yếu nhất từ đề thứ 7 (không xem đáp án)<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Đọc hiểu N3 speed reading — giới hạn 25 phút/bài dài<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>(mỗi ngày)</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki ôn tổng + từ sai từ đề<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:00</span><span class="session-content">Luyện từng section nhỏ (mỗi ngày 1 loại: văn tự, từ vựng, ngữ pháp, đọc)<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">20:00–20:30</span><span class="session-content">Nghe 1 đoạn N3 thuần (podcast / radio Nhật tự nhiên)<span class="session-tag tag-listening">nghe</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần 12–13 &nbsp;·&nbsp; 14/6 – 27/6</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Sprint cuối + Ôn tổng hợp</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>14/6 & 21/6</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–11:00</span><span class="session-content">Đề thi thử N3 mới (đề số 3+4 — đủ điều kiện thi nếu đạt 60+)<span class="session-tag tag-practice">luyện đề</span></span></div>
+          <div class="session"><span class="session-time">11:00–12:00</span><span class="session-content">Ôn ngữ pháp những mẫu hay sai nhất<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">13:30–15:00</span><span class="session-content">Ôn từ vựng & kanji tổng (Anki: chỉ học lại thẻ sai)<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">15:00–16:00</span><span class="session-content">Đọc hiểu chiến lược: gạch chân, tìm keyword<span class="session-tag tag-reading">đọc</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name weekend">Chủ nhật<br>15/6 & 22/6</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Nghe N3: luyện phần hội thoại dài + tóm tắt nội dung<span class="session-tag tag-listening">nghe</span></span></div>
+          <div class="session"><span class="session-time">10:00–12:00</span><span class="session-content">Tổng ôn ngữ pháp N3 toàn bộ (xem lại note, không học mới)<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">T2–T6<br>16–27/6</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">18:30–19:00</span><span class="session-content">Anki: chỉ ôn thẻ sắp hết hạn — giảm tải<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">19:00–20:30</span><span class="session-content">Section thi mini 30 phút + xem lại chiến lược làm bài<span class="session-tag tag-practice">luyện đề</span></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-card" onclick="toggleWeek(this)">
+    <div class="week-header">
+      <span class="week-title">Tuần cuối &nbsp;·&nbsp; 28/6 – 4/7 (trước thi)</span>
+      <div style="display:flex;align-items:center;gap:8px"><span class="week-meta">Thư giãn + Duy trì — Không học nặng!</span><span class="chevron">▾</span></div>
+    </div>
+    <div class="week-body">
+      <div class="day-row">
+        <div class="day-name weekend">Thứ 7<br>28/6</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">08:00–10:00</span><span class="session-content">Xem lại toàn bộ notes ngữ pháp một lần — không học mới<span class="session-tag tag-grammar">ngữ pháp</span></span></div>
+          <div class="session"><span class="session-time">10:00–11:30</span><span class="session-content">Anki ôn nhẹ từ vựng + kanji quan trọng<span class="session-tag tag-vocab">từ vựng</span></span></div>
+          <div class="session"><span class="session-time">Chiều</span><span class="session-content rest-note">Nghỉ ngơi, không học thêm — dưỡng sức cho ngày thi</span></div>
+        </div>
+      </div>
+      <div class="day-row">
+        <div class="day-name">29/6–4/7</div>
+        <div class="sessions">
+          <div class="session"><span class="session-time">Sáng</span><span class="session-content">Anki nhẹ 15–20 phút/ngày + xem lại từ hay sai</span></div>
+          <div class="session"><span class="session-time">Tối</span><span class="session-content rest-note">Nghỉ ngơi đầy đủ, ngủ đúng giờ. Không thức khuya học!</span></div>
+        </div>
+      </div>
+      <div class="tip-box">Ngày thi 5/7: Đến địa điểm thi sớm 30 phút. Mang theo bút chì 2B, tẩy, CMND, thẻ dự thi. Ăn sáng đầy đủ. Bạn đã chuẩn bị kỹ rồi — tự tin lên!</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function switchTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+function toggleWeek(card) {
+  card.classList.toggle('collapsed');
+}
+</script>
